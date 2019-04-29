@@ -2,6 +2,7 @@ const Hapi = require('hapi');
 const Joi = require('joi');
 const Mongoose = require('mongoose');
 const fetch = require('node-fetch');
+const Wreck = require('wreck');
 
 // Server.
 
@@ -13,14 +14,38 @@ const server = new Hapi.Server({
 Mongoose.connect("mongodb://localhost/civilizations");
 
 const CivModel = Mongoose.model("civilization", {
+    id: Number,
     name: String,
     expansion: String,
     army: String
 });
 
-fetch('https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations')
-    .then(res => res.json())
-    .then(json => {
-        const civs = new CivModel({name: json.name, expansion: json.expansion, army: json.army_type});
-        console.log(civs);
-    });
+server.route({
+    method: "GET",
+    path: "/",
+    handler: async (request, h) => {
+        const { res, payload } = await Wreck.get('https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations');
+        const c = JSON.parse(payload).civilizations
+        for (let i = 0; i < c.length; i++) {
+            var civs = new CivModel({
+                id: c[i].id,
+                name: c[i].name,
+                expansion: c[i].expansion,
+                army: c[i].army_type,
+            });
+            await CivModel.findOne({id: civs.id}, (data) => {
+                console.log(data)
+            });
+            console.log(CivModel.findOne({id: civs.id, _id:0}));
+            console.log(civs.id);
+            console.log(c[i].id);
+            if (!(await CivModel.findOne({},{id: civs.id, _id:0}).exec())) {
+                civs.save().then(() => console.log('Saved'));
+            }
+        }
+        var civis = await CivModel.find().exec();
+        return h.response(civis);
+    }
+});
+
+server.start();
