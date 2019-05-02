@@ -1,14 +1,5 @@
 const Wreck = require('wreck');
-const Mongoose = require('mongoose');
-
-// Model
-
-const CivModel = Mongoose.model("civilization", {
-    id: Number,
-    name: String,
-    expansion: String,
-    army: String
-});
+const CivModel = require('./models/civmodel');
 
 // Routes
 
@@ -19,6 +10,7 @@ module.exports = [
         handler: async (request, h) => {
             const { res, payload } = await Wreck.get('https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations');
             const c = JSON.parse(payload).civilizations
+            console.log(CivModel);
             for (let i = 0; i < c.length; i++) {
                 await CivModel.findOne({ id: c[i].id }, (err, user) => {
                     if (err) {
@@ -45,6 +37,20 @@ module.exports = [
     },
 
     {
+        method: "GET",
+        path: "/getciv/{id}",
+        handler: async (request, h) => {
+            try {
+                console.log(request.params.id);
+                var result = await CivModel.findById(request.params.id);
+                return h.response(result);
+            } catch (error) {
+                return h.response(error).code(500);
+            }
+        }
+    },
+
+    {
         method: "DELETE",
         path: "/deleteciv/{id}",
         handler: async (request, h) => {
@@ -67,6 +73,38 @@ module.exports = [
             } catch (error) {
                 return h.response(error).code(500);
             }
+        }
+    },
+
+    {
+        method: "POST",
+        path: "/createciv",
+        handler: async (request, h) => {
+            try {
+                var r = request.payload;
+                const civs = new CivModel({
+                    id: r.id,
+                    name: r.name,
+                    expansion: r.expansion,
+                    army: r.army,
+                });
+                console.log(civs);
+                civs.save().then(() => console.log('Saved'));
+
+                return "Added";
+
+            } catch (error) {
+                return h.response(error).code(500);
+            }
+        }
+    },
+
+    {
+        method: "GET",
+        path: "/civs",
+        handler: async (request, h) => {
+            var civs = await CivModel.find().exec();
+            return h.response(civs);
         }
     }
 ];
