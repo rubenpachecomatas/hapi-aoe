@@ -86,6 +86,12 @@ module.exports = [
     {
         method: "POST",
         path: "/createciv",
+        config: {
+            cors: {
+                origin: ['*'],
+                additionalHeaders: ['cache-control', 'x-requested-with']
+            }
+        },
         handler: async (request, h) => {
             try {
                 var r = request.payload;
