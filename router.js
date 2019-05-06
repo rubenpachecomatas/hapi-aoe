@@ -4,9 +4,16 @@ const CivModel = require('./models/civmodel');
 // Routes
 
 module.exports = [
+
     {
         method: "GET",
         path: "/",
+        config: {
+            cors: {
+                origin: ['*'],
+                additionalHeaders: ['cache-control', 'x-requested-with']
+            }
+        },
         handler: async (request, h) => {
             const { res, payload } = await Wreck.get('https://age-of-empires-2-api.herokuapp.com/api/v1/civilizations');
             const c = JSON.parse(payload).civilizations
@@ -82,6 +89,7 @@ module.exports = [
         handler: async (request, h) => {
             try {
                 var r = request.payload;
+                console.log(r);
                 const civs = new CivModel({
                     id: r.id,
                     name: r.name,
@@ -102,6 +110,12 @@ module.exports = [
     {
         method: "GET",
         path: "/civs",
+        config: {
+            cors: {
+                origin: ['*'],
+                additionalHeaders: ['cache-control', 'x-requested-with']
+            }
+        },
         handler: async (request, h) => {
             var civs = await CivModel.find().exec();
             return h.response(civs);
