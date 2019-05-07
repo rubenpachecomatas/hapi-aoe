@@ -71,6 +71,26 @@ module.exports = [
     },
 
     {
+        method: "DELETE",
+        path: "/deleteciv",
+        config: {
+            cors: {
+                origin: ['*'],
+                additionalHeaders: ['cache-control', 'x-requested-with']
+            }
+        },
+        handler: async (request, h) => {
+            try {
+                var result = await CivModel.findByIdAndDelete(request.payload.id);
+                console.log(result);
+                return h.response(result);
+            } catch (error) {
+                return h.response(error).code(500);
+            }
+        }
+    },
+
+    {
         method: "PUT",
         path: "/updateciv/{id}",
         handler: async (request, h) => {
@@ -105,7 +125,7 @@ module.exports = [
                 console.log(civs);
                 civs.save().then(() => console.log('Saved'));
 
-                return "Added";
+                return { message: 'Added' };
 
             } catch (error) {
                 return h.response(error).code(500);
