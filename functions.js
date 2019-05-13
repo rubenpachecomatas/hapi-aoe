@@ -66,6 +66,9 @@ module.exports = {
         console.log(request.payload.id);
         var result = await CivModel.findByIdAndDelete(request.payload.id);
         console.log(result);
+        if (result === null) {
+            return { message: 'Null' };
+        }
         return { message: 'Deleted' };
     },
 
