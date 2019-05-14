@@ -13,7 +13,6 @@ module.exports = {
                 } else {
                     if (!user) {
                         const civs = new CivModel({
-                            id: c[i].id,
                             name: c[i].name,
                             expansion: c[i].expansion,
                             army: c[i].army_type,

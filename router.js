@@ -57,8 +57,7 @@ module.exports = [
             try {
                 return functions.deleleCiv(request, h);
             } catch (error) {
-                console.log('error test');
-                return { message: 'Null' };
+                return h.response(error).code(500);
             }
         }
     },
