@@ -5,11 +5,11 @@ const routes = require('./router')
 // Server.
 
 const server = new Hapi.Server({
-    //host: 'localhost',
-    port: process.env.PORT || 3030
+    host: 'localhost',
+    port: 3030
 });
 
-Mongoose.connect("mongodb+srv://odlana:odlana@aoe-db-b434a.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
+Mongoose.connect("mongodb://localhost/civilizations", {useNewUrlParser: true});
 
 server.route(routes);
 
