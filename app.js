@@ -5,7 +5,7 @@ const routes = require('./router')
 // Server.
 
 const server = new Hapi.Server({
-    host: 'localhost',
+    //host: 'localhost',
     port: process.env.PORT || 3030
 });
 
