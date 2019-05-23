@@ -9,7 +9,7 @@ const server = new Hapi.Server({
     port: process.env.PORT || 3030
 });
 
-Mongoose.connect("mongodb://localhost/civilizations", {useNewUrlParser: true});
+Mongoose.connect("mongodb+srv://odlana:odlana@aoe-db-b434a.mongodb.net/test?retryWrites=true", {useNewUrlParser: true});
 
 server.route(routes);
 
