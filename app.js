@@ -6,7 +6,7 @@ const routes = require('./router')
 
 const server = new Hapi.Server({
     host: 'localhost',
-    port: 3030
+    port: process.env.PORT || 3030
 });
 
 Mongoose.connect("mongodb://localhost/civilizations", {useNewUrlParser: true});
