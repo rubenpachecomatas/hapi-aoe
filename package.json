@@ -14,7 +14,7 @@
     "hapi": "^18.1.0",
     "joi": "^14.3.1",
     "mongoose": "^5.5.3",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^2.6.1",
     "wreck": "^14.2.0"
   },
   "devDependencies": {
